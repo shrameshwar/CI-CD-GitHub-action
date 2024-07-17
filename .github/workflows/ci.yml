@@ -59,7 +59,7 @@ jobs:
       uses: SonarSource/sonarcloud-github-action@v1
       with:
         args: >
-          -Dsonar.projectKey=CI
+          -Dsonar.projectKey=github-action
           -Dsonar.host.url=${{ env.SONARQUBE_URL }}
           -Dsonar.login=${{ env.SONARQUBE_LOGIN }}
 
@@ -73,27 +73,3 @@ jobs:
       run: |
         gcloud auth configure-docker asia-east1-docker.pkg.dev
         docker push ${{ env.DOCKER_REPO }}/java-application
-
-    - name: Send success email
-      if: success()
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: "Pipeline Succeeded: ${{ github.run_id }}"
-        body: "The pipeline has successfully completed."
-        to: shrameshwar1999@gmail.com
-
-    - name: Send failure email
-      if: failure()
-      uses: dawidd6/action-send-mail@v3
-      with:
-        server_address: smtp.gmail.com
-        server_port: 465
-        username: ${{ secrets.EMAIL_USERNAME }}
-        password: ${{ secrets.EMAIL_PASSWORD }}
-        subject: "Pipeline Failed: ${{ github.run_id }}"
-        body: "The pipeline has failed. Check the logs for details."
-        to: shrameshwar1999@gmail.com
