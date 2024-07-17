@@ -7,7 +7,7 @@ on:
 
 env:
   SONARQUBE_URL: 'http://34.125.125.40:9000'
-  SONARQUBE_LOGIN: ${{ secrets.SONARQUBE_LOGIN }}
+  SONARQUBE_LOGIN: ${{ secrets.SONAR_TOKEN }}
   GCLOUD_PROJECT: 'charged-gravity-425405-j6'
   IMAGE_NAME: 'java-application'
   DOCKER_REPO: 'asia-east1-docker.pkg.dev/charged-gravity-425405-j6/docker-image'
@@ -57,12 +57,11 @@ jobs:
 
     - name: SonarQube Analysis
       uses: SonarSource/sonarcloud-github-action@v1
-      with:
-        args: >
-          mvn clean verify sonar:sonar \
-          -Dsonar.projectKey=github-action \
-          -Dsonar.host.url=http://34.125.125.40:9000 \
-          -Dsonar.login=squ_808b0561079a0babb582c46b32c69ddff285c731
+    - name: SonarQube Analysis
+      run: mvn clean verify sonar:sonar \
+        -Dsonar.projectKey=github-action \
+        -Dsonar.host.url=${{ env.SONARQUBE_URL }} \
+        -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
     - name: Docker Image Creation
       run: docker build -t ${{ env.DOCKER_REPO }}/java-application .
